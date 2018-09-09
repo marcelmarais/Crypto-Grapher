@@ -3,5 +3,3 @@ dash_core_components==0.26.0
 requests==2.18.4
 dash==0.22.0
 plotly==3.2.0
-gunicorn==19.9.0
-
