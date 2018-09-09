@@ -5,7 +5,7 @@ import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
-type = "ETH"  # Either BTC or ETH
+type = "BTC"  # Either BTC or ETH
 
 bg_colour = '#e7e5e2'
 sec_colour = '#38474e'
@@ -29,7 +29,7 @@ layout = go.Layout(title=type + '/ZAR',
                               'size': 36, 'color': sec_colour},
                    xaxis={'title': 'Time', 'tickangle': 45,
                           'color': sec_colour},
-                   yaxis={'title': 'Revenue', 'color': sec_colour},
+                   yaxis={'title': 'Price', 'color': sec_colour},
                    plot_bgcolor=bg_colour,
                    paper_bgcolor=bg_colour,
                    )
