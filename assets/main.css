@@ -1,0 +1,39 @@
+@font-face {
+
+    font-family: 'MainFont'; /*a name to be used later*/
+    src: url('SIMPLIFICA Typeface.ttf'); /*URL to font*/
+    font-size: 20px;
+}
+body {
+    background-color: #fffff2;
+    background-repeat: no-repeat;
+    background-image: url("WebsiteBground.jpg");
+    background-size: cover;
+    font-family: MainFont;
+    margin: 0;
+}
+h1{
+  font-family: MainFont;
+  text-align: center;
+  overflow:hidden;
+  font-weight: bold;
+  margin-top:25px;
+  margin-bottom:4px;
+  font-size: 60px;
+}
+h2{
+  font-family: MainFont;
+  text-align: center;
+  overflow:hidden;
+  margin-top:12px;
+  margin-bottom:5px;
+  font-size: 50px;
+
+}
+h3{
+  font-family: MainFont;
+  text-align: center;
+  overflow:hidden;
+  margin-top:8px;
+  margin-bottom:5px;
+  font-size: 21px;
