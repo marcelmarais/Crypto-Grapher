@@ -1,12 +1,13 @@
 import data
+from datetime import datetime
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
-type = "BTC"  # Either BTC or ETH
-
+type = "ETH"  # Either BTC or ETH
+count = 0
 bg_colour = '#e7e5e2'
 sec_colour = '#38474e'
 tick_colour = '#3ed5a0'
@@ -71,7 +72,13 @@ app.layout = html.Div(children=[
               [Input('interval-component', 'n_intervals')])
 def update_output_heading(time):
     data_type()
-    x.append(time)
+    Second = int(str(datetime.now())[17:19])
+
+    Hour = str(datetime.now())[11:13]
+    Minute = str(datetime.now())[14:16]
+    Second = str(datetime.now())[17:19]
+
+    x.append(Hour+" "+Minute+" "+Second)
 
     trace2 = go.Scatter(
 
@@ -103,6 +110,8 @@ def updateChange(time):
     change = str(change) + "%"
     return change
 
+
+server = app.server
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=5300)
