@@ -1,35 +1,44 @@
 import data
-from datetime import datetime
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
+from datetime import date
 
-type = "ETH"  # Either BTC or ETH
+
+def today(): return date.today().day
+
+
+day = today()
+
+
+class now():
+    now = day
+
+
+type = "BTC"  # Either BTC or ETH
 count = 0
 bg_colour = '#e7e5e2'
 sec_colour = '#38474e'
 tick_colour = '#3ed5a0'
 
 x = []
-y = []
+y_btc = []
+y_eth = []
 
 
-def data_type(value=type):
-    ticker_data = data.prices()
+def data_type():
 
-    if(type == "ETH"):
-        y.append(ticker_data.ETH)
-    if(type == "BTC"):
-        y.append(ticker_data.BTC)
+    y_btc.append(data.api_data()["btc_price"])
+    x.append(data.api_data()["Timestamp"])
 
 
 layout = go.Layout(title=type + '/ZAR',
                    titlefont={'family': 'MainFont',
                               'size': 36, 'color': sec_colour},
                    xaxis={'title': 'Time', 'tickangle': 45,
-                          'color': sec_colour},
+                          'color': sec_colour, "showticklabels": False, },
                    yaxis={'title': 'Price', 'color': sec_colour},
                    plot_bgcolor=bg_colour,
                    paper_bgcolor=bg_colour,
@@ -47,12 +56,12 @@ app.layout = html.Div(children=[
 
     dcc.Interval(
         id='interval-component',
-        interval=2 * 1000,  # in milliseconds
+        interval=5 * 1000,  # in milliseconds
         n_intervals=0
     ),
     dcc.Interval(
         id='title-time',
-        interval=2 * 1000,  # in milliseconds
+        interval=5 * 1000,  # in milliseconds
         n_intervals=1
     ),
 
@@ -62,6 +71,7 @@ app.layout = html.Div(children=[
             'data': [
             ],
             'layout': [
+                layout
             ]
         }
     )
@@ -71,42 +81,43 @@ app.layout = html.Div(children=[
 @app.callback(Output('ticker', 'figure'),
               [Input('interval-component', 'n_intervals')])
 def update_output_heading(time):
+    today_day = now().now
+
+    if(today_day != today()):
+        today_day = today()
+        x.clear()
+        y.clear()
+
     data_type()
-    Second = int(str(datetime.now())[17:19])
 
-    Hour = str(datetime.now())[11:13]
-    Minute = str(datetime.now())[14:16]
-    Second = str(datetime.now())[17:19]
-
-    x.append(Hour+" "+Minute+" "+Second)
-
-    trace2 = go.Scatter(
-
+    trace_btc = go.Scatter(
         x=x,
-        y=y,
-        name='Money',
+        y=y_btc,
+
+        name='Price',
         line=dict(
             color=tick_colour,
             width=2,
-        )),
+        ),
+    ),
 
     return{
-        'data': trace2,
-        'layout': layout
+        'data': trace_btc,
+        'layout': layout,
     }
 
 
 @app.callback(Output('price', 'children'),
               [Input('title-time', 'n_intervals')])
 def updatePrice(time):
-    latest_price = "R" + str(y[-1])
+    latest_price = "R" + str(y_btc[-1])
     return latest_price
 
 
 @app.callback(Output('percent_change', 'children'),
               [Input('title-time', 'n_intervals')])
 def updateChange(time):
-    change = round((((y[-1] / y[0]) - 1) * 100), 2)
+    change = round((((y_btc[-1] / y_btc[0]) - 1) * 100), 2)
     change = str(change) + "%"
     return change
 
