@@ -11,4 +11,5 @@ def api_data():
 
     time = btc_data.get('timestamp')
     keyStore = {"btc_price": btc_price, "Timestamp": time}
+    
     return keyStore

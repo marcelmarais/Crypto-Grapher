@@ -20,16 +20,14 @@ h1 {
     text-align: center;
     overflow: hidden;
     margin-top: 25px;
-    margin-bottom: 4px;
-    font-size: 70px;
+    margin-bottom: 3px;
+    font-size: 64px;
 }
 
 h2 {
     font-family: MainFont;
-    text-align: center;
     overflow: hidden;
-    margin-top: 12px;
-    margin-bottom: 5px;
+    margin-top: 45px;
     font-size: 50px;
 }
 

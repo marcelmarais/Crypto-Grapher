@@ -1,44 +1,57 @@
-import data
+import datetime as dt
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import numpy as np
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
-from datetime import date
+
+import data
+
+'''
+TODO: 
+-Create venv
+-Add an hourly reset feature and increment x axis in 30 seconds intervals. (Make sure graph is reset not just list)
+-Add custom HTML: favicon, title, etc. Might be weird cause Dash has its own HTML thing going on
+-Is it necessary to return layout in every period?
+-Clean code
+-Deploy using flask , docker , nginx on EC2. Should probably load own instance of flask into app.
+'''
 
 
-def today(): return date.today().day
-
-
-day = today()
-
-
-class now():
-    now = day
-
-
-type = "BTC"  # Either BTC or ETH
+type = "BTC"
 count = 0
+
+def get_time():
+    hour = str(dt.datetime.now().hour)
+    minute = str(dt.datetime.now().minute)
+
+    if int(minute) < 10:
+        minute = "0"+minute
+
+    return hour+":"+minute
+    
 bg_colour = '#e7e5e2'
 sec_colour = '#38474e'
 tick_colour = '#3ed5a0'
 
+interval = 30 * 1000  # In milliseconds
+
 x = []
 y_btc = []
-y_eth = []
 
 
 def data_type():
 
     y_btc.append(data.api_data()["btc_price"])
-    x.append(data.api_data()["Timestamp"])
+    x.append(((len(y_btc)-1)/2))
 
 
 layout = go.Layout(title=type + '/ZAR',
                    titlefont={'family': 'MainFont',
                               'size': 36, 'color': sec_colour},
-                   xaxis={'title': 'Time', 'tickangle': 45,
-                          'color': sec_colour, "showticklabels": False, },
+                   xaxis={'title': 'Time (Minutes)', 'tickangle': 45,
+                          'color': sec_colour, "showticklabels": True, },
                    yaxis={'title': 'Price', 'color': sec_colour},
                    plot_bgcolor=bg_colour,
                    paper_bgcolor=bg_colour,
@@ -49,19 +62,24 @@ app = dash.Dash(__name__, static_folder='assets')
 app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 
+server = app.server
+
+
 app.layout = html.Div(children=[
+
     html.Link(href='/assets/main.css', rel='stylesheet'),
     html.H1(children='Price', id="price"),
     html.H1(children='% Change', id="percent_change"),
 
+    html.H2(children=get_time(), id="time"),
     dcc.Interval(
         id='interval-component',
-        interval=5 * 1000,  # in milliseconds
+        interval=interval,
         n_intervals=0
     ),
     dcc.Interval(
         id='title-time',
-        interval=5 * 1000,  # in milliseconds
+        interval=interval,
         n_intervals=1
     ),
 
@@ -74,19 +92,24 @@ app.layout = html.Div(children=[
                 layout
             ]
         }
-    )
+    ),
 ])
 
 
 @app.callback(Output('ticker', 'figure'),
               [Input('interval-component', 'n_intervals')])
 def update_output_heading(time):
-    today_day = now().now
 
-    if(today_day != today()):
-        today_day = today()
+    print(len(y_btc))
+
+    if(len(y_btc) >= 120):  # Resets graph hourly
         x.clear()
-        y.clear()
+        y_btc.clear()
+
+        trace_btc = go.Scatter(
+            x=[],
+            y=[],
+        )
 
     data_type()
 
@@ -121,8 +144,12 @@ def updateChange(time):
     change = str(change) + "%"
     return change
 
+@app.callback(Output('time', 'children'),
+              [Input('title-time', 'n_intervals')])
+def updateTime(time):
+    time = get_time()
+    return time
 
-server = app.server
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=5300)
