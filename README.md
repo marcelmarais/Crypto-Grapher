@@ -1,7 +1,7 @@
 # Crypto-Grapher
 Graphs cryptocurrencys (ETH and BTC) from the South African Luno exchange using the Dash web framework.
 ###
-**Hosted at:** https://sa-crypto-grapher.herokuapp.com/
+**Hosted at:** http://crypto-grapher.marcelmarais.com/
 ##
 ![alt text](https://i.imgur.com/f6vIGxE.jpg)
 ## Dependencies
