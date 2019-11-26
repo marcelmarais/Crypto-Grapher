@@ -1,3 +1,4 @@
+>***IEX Finance has changed the pricing structure of their API and this no longer works***
 # Crypto-Grapher
 Graphs cryptocurrencys (ETH and BTC) from the South African Luno exchange using the Dash web framework.
 ###
