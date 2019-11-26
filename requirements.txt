@@ -2,4 +2,4 @@ dash_html_components==0.11.0
 dash==0.22.0
 plotly==3.2.0
 dash_core_components==0.26.0
-requests==2.18.4
+requests==2.20.0
